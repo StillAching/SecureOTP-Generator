@@ -1,10 +1,11 @@
-﻿namespace SecureOTPGenerator
+﻿
+namespace SecureOTPGenerator
 {
     public class TOTP
     {
         public string Secret { get; set; }
         public int Digits { get; set; } = 6;
-        public string Algorithm { get; set; } = "SHA1";
+        public HashAlgorithm Algorithm { get; set; } = HashAlgorithm.SHA1;
         public long Period { get; set; } = 30L;
         public long UnixTime { get; set; }
 
@@ -15,17 +16,12 @@
                 throw new ArgumentException("No secret key provided");
             }
 
-            if (Digits == 0)
+            if (Digits <= 0)
             {
                 Digits = 6;
             }
 
-            if (string.IsNullOrEmpty(Algorithm))
-            {
-                Algorithm = "SHA1";
-            }
-
-            if (Period == 0)
+            if (Period <= 0)
             {
                 Period = 30L;
             }

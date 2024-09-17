@@ -1,4 +1,5 @@
-﻿namespace SecureOTPGenerator
+﻿
+namespace SecureOTPGenerator
 {
     public class HOTP
     {
@@ -13,12 +14,12 @@
                 throw new ArgumentException("No secret key provided!!!!");
             }
 
-            if (Digits == 0)
+            if (Digits <= 0)
             {
                 Digits = 6;
             }
 
-            return OTPGenerator.GenerateOTP(Secret, Counter, Digits, "SHA1");
+            return OTPGenerator.GenerateOTP(Secret, Counter, Digits, HashAlgorithm.SHA1);
         }
     }
 }
