@@ -37,13 +37,13 @@ public class Program
 {
     public static void Main()
     {
-        var totp = new TOTP
+        var totp = new SecureOTPGenerator.TOTP
         {
-            Secret = "PUT SECRET HERE!!!", // Required
-            Digits = 6,                    // Optional (default is 6)
-            Algorithm = "SHA1",            // Optional (default is SHA1)
-            Period = 30,                   // Optional (default is 30 seconds)
-            UnixTime = 99999999999         // Optional (default is current Unix time)
+            Secret = "PUT SECRET HERE!!!",                      // Required Base32 encoded secret key
+            Digits = 6,                                         // Optional (default is 6)
+            Algorithm = SecureOTPGenerator.HashAlgorithm.SHA1,  // Optional (default is SHA1)
+            Period = 30,                                        // Optional (default is 30 seconds) [30 seconds period is common for TOTP]
+            //UnixTime = 99999999999                            // Optional (default is current Unix time)
         };
 
         string otp = totp.Generate();
@@ -63,11 +63,11 @@ public class Program
 {
     public static void Main()
     {
-        var hotp = new HOTP
+        var hotp = new SecureOTPGenerator.HOTP
         {
-            Secret = "PUT SECRET HERE!!!", // Required
-            Digits = 6,                    // Optional (default is 6)
-            Counter = 0                    // Optional (default is 0)
+            Secret = "PUT SECRET HERE!!!",  // Required
+            Digits = 6,                     // Optional (default is 6)
+            Counter = 0                     // Optional (default is 0)
         };
 
         string otp = hotp.Generate();
@@ -82,7 +82,7 @@ public class Program
 
 - **Secret**: Base32-encoded string used as the secret key. (Required)
 - **Digits**: Number of digits in the OTP (default is 6).
-- **Algorithm**: Hashing algorithm to use (`SHA1`, `SHA256`, `SHA512`). Default is `SHA1`.
+- **Algorithm**: Hashing algorithm to use (`SHA1`, `SHA256`, `SHA512`). Default is set to `SHA1`.
 - **Period**: Time period in seconds for the TOTP (default is 30 seconds).
 - **UnixTime**: Unix timestamp for generating the OTP. Defaults to the current time.
 
