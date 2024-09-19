@@ -1,5 +1,4 @@
-﻿
-namespace SecureOTPGenerator
+﻿namespace SecureOTPGenerator
 {
     public class HOTP
     {

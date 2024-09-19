@@ -2,17 +2,17 @@
 
 namespace SecureOTPGenerator
 {
-    public enum HashAlgorithm
-    {
-        SHA1,
-        SHA256,
-        SHA512
-    }
-
     public class OTPGenerator
     {
         public static string GenerateOTP(string base32Key, long counter, int digits, HashAlgorithm algo)
         {
+            if (string.IsNullOrWhiteSpace(base32Key))
+                throw new ArgumentException("Base32 key cannot be null or empty.");
+
+            if (digits <= 0)
+                throw new ArgumentException("Digits must be a positive integer.");
+
+
             byte[] bytes = BitConverter.GetBytes(counter);
             if (BitConverter.IsLittleEndian)
             {
@@ -23,6 +23,10 @@ namespace SecureOTPGenerator
             byte[] hash;
             switch (algo)
             {
+                case HashAlgorithm.MD5:
+                    hash = new HMACMD5(key).ComputeHash(bytes);
+                    break;
+
                 case HashAlgorithm.SHA1:
                     hash = new HMACSHA1(key).ComputeHash(bytes);
                     break;
@@ -36,7 +40,7 @@ namespace SecureOTPGenerator
                     break;
 
                 default:
-                    throw new ArgumentException("Invalid algorithm. Please use any one of SHA1, SHA256, or SHA512");
+                    throw new ArgumentException("Invalid algorithm. Please use any one of SHA1, SHA256, SHA512 or MD5");
             }
 
             int sourceIndex = hash[hash.Length - 1] & 0xF;
@@ -54,11 +58,38 @@ namespace SecureOTPGenerator
 
         private static byte[] Base32Decode(string base32EncodedString)
         {
+            if (string.IsNullOrEmpty(base32EncodedString))
+                throw new ArgumentNullException(nameof(base32EncodedString));
+
             const string Base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-            base32EncodedString = base32EncodedString.TrimEnd('=');
-            string bits = string.Join("", from c in base32EncodedString.ToUpper() select Convert.ToString(Base32Alphabet.IndexOf(c), 2).PadLeft(5, '0'));
-            byte[] bytes = (from i in Enumerable.Range(0, bits.Length / 8) select Convert.ToByte(bits.Substring(i * 8, 8), 2)).ToArray();
-            return bytes.Take(bytes.Length - bytes.Length % 5 / 5).ToArray();
+            base32EncodedString = base32EncodedString.TrimEnd('=').ToUpperInvariant();
+
+            int byteCount = base32EncodedString.Length * 5 / 8;
+            byte[] result = new byte[byteCount];
+
+            int buffer = 0;
+            int bitsLeft = 0;
+            int index = 0;
+
+            foreach (char c in base32EncodedString)
+            {
+                int value = Base32Alphabet.IndexOf(c);
+                if (value < 0)
+                    throw new FormatException($"Invalid Base32 character '{c}' in input.");
+
+                buffer <<= 5;
+                buffer |= value & 31;
+                bitsLeft += 5;
+
+                if (bitsLeft >= 8)
+                {
+                    result[index++] = (byte)(buffer >> (bitsLeft - 8));
+                    bitsLeft -= 8;
+                }
+            }
+
+            return result;
         }
+
     }
 }
