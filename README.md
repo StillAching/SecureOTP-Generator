@@ -6,7 +6,7 @@
 
 - **TOTP Generation**: Generate time-based OTPs with configurable time periods, algorithms, and digits.
 - **HOTP Generation**: Generate counter-based OTPs with configurable counters, algorithms, and digits.
-- **Configurable Algorithms**: Supports SHA1, SHA256, and SHA512 hashing algorithms.
+- **Configurable Algorithms**: Supports MD5, SHA1, SHA256, and SHA512 hashing algorithms.
 - **Base32 Secret Keys**: Utilizes Base32-encoded secret keys for secure OTP generation.
 
 ## Installation
@@ -82,7 +82,7 @@ public class Program
 
 - **Secret**: Base32-encoded string used as the secret key. (Required)
 - **Digits**: Number of digits in the OTP (default is 6).
-- **Algorithm**: Hashing algorithm to use (`SHA1`, `SHA256`, `SHA512`). Default is set to `SHA1`.
+- **Algorithm**: Hashing algorithm to use (`MD5`, `SHA1`, `SHA256`, `SHA512`). Default is set to `SHA1`.
 - **Period**: Time period in seconds for the TOTP (default is 30 seconds).
 - **UnixTime**: Unix timestamp for generating the OTP. Defaults to the current time.
 
