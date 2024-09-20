@@ -39,7 +39,7 @@ public class Program
     {
         var totp = new SecureOTPGenerator.TOTP
         {
-            Secret = "PUT SECRET HERE!!!",                      // Required Base32 encoded secret key
+            Secret = "PUT SECRET HERE!!!",                      // Required
             Digits = 6,                                         // Optional (default is 6)
             Algorithm = SecureOTPGenerator.HashAlgorithm.SHA1,  // Optional (default is SHA1)
             Period = 30,                                        // Optional (default is 30 seconds) [30 seconds period is common for TOTP]
